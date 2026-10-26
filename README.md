@@ -25,7 +25,7 @@
 ## 快速开始（免安装版，无需 Node.js）
 
 1. 到 GitHub Releases 下载对应平台的单文件程序（macOS arm64/x64、Windows、Linux）；
-2. 已在教学平台「个人中心 → API Key 管理」创建 API Key；
+2. 已在教学平台（https://edu.tksai.com）注册，通过「个人中心 →  MCP 管理」创建密钥；
 3. 在智能体的 MCP 配置中加入（`command` 改为下载文件的实际路径）：
 
 ```json
