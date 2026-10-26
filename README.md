@@ -15,7 +15,7 @@
       "type": "stdio",
       "command": "/Users/你的用户名/Downloads/tks-ai-edu-upload-mcp-macos-arm64",
       "env": {
-        "EDU_API_BASE": "https://你的平台域名/app-api",
+        "EDU_API_BASE": "https://edu.tksai.com/app-api",
         "EDU_API_KEY": "tksai_你的明文Key"
       }
     }
@@ -28,8 +28,8 @@
 
 | 环境变量 | 说明 |
 |---|---|
-| `EDU_API_BASE` | 后端 `/app-api` 地址（必填） |
-| `EDU_API_KEY` | 平台个人中心创建的 API Key 明文（必填，仅创建时展示一次） |
+| `EDU_API_BASE` | 后端 `https://edu.tksai.com/app-api` 地址（必填） |
+| `EDU_API_KEY` | 平台个人中心创建的 MCP 明文密钥（必填，仅创建时展示一次） |
 | `EDU_TERMINAL` | 可选，终端类型，默认 `20`（H5） |
 
 ## 提供的工具
