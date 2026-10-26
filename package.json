@@ -1,0 +1,39 @@
+{
+  "name": "@tks-ai/edu-upload-mcp",
+  "version": "1.0.0",
+  "description": "教学应用上传 MCP Server：供 AI 编程智能体（CodeBuddy/Trae/WorkBuddy/Codex）上传文件/文件夹并创建教学作品",
+  "type": "module",
+  "bin": {
+    "tks-ai-edu-upload-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist/index.js",
+    "dist/eduClient.js"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:bin": "npm run build && node build.mjs",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18.20.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "jszip": "^3.10.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/jszip": "^3.4.0",
+    "@types/node": "^20.11.0",
+    "bun": "^1.4.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}

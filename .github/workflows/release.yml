@@ -1,0 +1,81 @@
+name: Release
+
+# 发布流程：
+#   1. 本地改版本号：npm version patch|minor|major（会自动打 tag 并推送）
+#   2. 推送 tag 到 GitHub：git push origin v1.0.1
+#   3. 本 workflow 自动：编译 TS -> Bun 打四平台二进制 -> 创建 GitHub Release 并上传产物
+#   4.（可选）npm 发布：在仓库 Settings -> Secrets 添加 NPM_TOKEN，
+#      并在 Settings -> Variables 添加 PUBLISH_NPM=true 后，推 tag 会自动 npm publish
+# 说明：bun 为 npm devDependency，npm ci 会一并安装；Bun 交叉编译无需目标平台工具链
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag（如 v1.0.1，需与 package.json version 一致）'
+        required: true
+
+permissions:
+  contents: write # 允许创建 Release 并上传产物
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile TypeScript
+        run: npm run build
+
+      - name: Package standalone binaries (win / macos / linux)
+        run: npm run build:bin
+
+      - name: Verify artifacts
+        run: |
+          ls -lh release/
+          test -f release/tks-ai-edu-upload-mcp-win-x64.exe
+          test -f release/tks-ai-edu-upload-mcp-macos-x64
+          test -f release/tks-ai-edu-upload-mcp-macos-arm64
+          test -f release/tks-ai-edu-upload-mcp-linux-x64
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: ${{ github.event.inputs.tag || github.ref_name }}
+          generate_release_notes: true
+          files: |
+            release/tks-ai-edu-upload-mcp-win-x64.exe
+            release/tks-ai-edu-upload-mcp-macos-x64
+            release/tks-ai-edu-upload-mcp-macos-arm64
+            release/tks-ai-edu-upload-mcp-linux-x64
+          fail_on_unmatched_files: true
+
+  publish-npm:
+    # 仅在设置仓库变量 PUBLISH_NPM=true 且配置 NPM_TOKEN 后启用
+    if: vars.PUBLISH_NPM == 'true'
+    needs: build-and-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm run build
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
