@@ -22,10 +22,22 @@
 
 典型链路：用任意 AI 智能体做出教学应用 / 课件 → 接入本 MCP → 上传并发布到 edu.tksai.com → 获得永久分享链接 + 持续收益。
 
-## 快速开始（免安装版，无需 Node.js）
+## 快速开始
 
-1. 到 GitHub Releases 下载对应平台的单文件程序（macOS arm64/x64、Windows、Linux）；
-2. 已在教学平台（https://edu.tksai.com）注册，通过「个人中心 →  MCP 管理」创建密钥；
+本 MCP 提供两种接入方式，功能完全一致，按你的习惯选择即可。
+
+### 方式一：免安装版（下载程序文件，无需 Node.js，推荐新手）
+
+1. 下载对应平台的单文件程序（亦可到 [GitHub Releases](https://github.com/Tenoyi/tksai-edu-upload-mcp/releases) 自行选择）：
+
+| 平台 | 架构 | 下载地址 |
+|---|---|---|
+| macOS | Apple Silicon (arm64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/latest/download/tks-ai-edu-upload-mcp-macos-arm64 |
+| macOS | Intel (x64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/latest/download/tks-ai-edu-upload-mcp-macos-x64 |
+| Windows | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/latest/download/tks-ai-edu-upload-mcp-win-x64.exe |
+| Linux | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/latest/download/tks-ai-edu-upload-mcp-linux-x64 |
+
+2. 已在教学平台（https://edu.tksai.com）注册，通过「个人中心 → MCP 管理」创建密钥；
 3. 在智能体的 MCP 配置中加入（`command` 改为下载文件的实际路径）：
 
 ```json
@@ -44,7 +56,36 @@
 ```
 
 > 平台「一键接入向导」可自动识别系统给出下载按钮、并生成填好 Key 的配置，无需手动编辑。
+> 注意：macOS / Linux 下载后需 `chmod +x <文件>` 赋予执行权限。
 > 完整接入指南（各智能体配置位置、FAQ）见教学平台文档《MCP 接入指引》。
+
+### 方式二：npm 包安装（需本机已装 Node.js ≥ 18，适合开发者）
+
+1. 全局安装（只需执行一次）：
+
+```bash
+npm install -g tks-ai-edu-upload-mcp
+```
+
+2. 已在教学平台（https://edu.tksai.com）注册，通过「个人中心 → MCP 管理」创建密钥；
+3. 在智能体的 MCP 配置中加入（`command` 使用 `npx tks-ai-edu-upload-mcp`，无需关心文件保存位置）：
+
+```json
+{
+  "mcpServers": {
+    "tks-ai-edu-upload": {
+      "type": "stdio",
+      "command": "npx tks-ai-edu-upload-mcp",
+      "env": {
+        "EDU_API_BASE": "https://edu.tksai.com/app-api",
+        "EDU_API_KEY": "tksai_你的明文Key"
+      }
+    }
+  }
+}
+```
+
+> 安装完成后命令即为 `npx tks-ai-edu-upload-mcp`，各智能体的接入向导会自动用它生成配置。
 
 | 环境变量 | 说明 |
 |---|---|
