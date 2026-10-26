@@ -29,7 +29,7 @@
 | 环境变量 | 说明 |
 |---|---|
 | `EDU_API_BASE` | 后端 `https://edu.tksai.com/app-api` 地址（必填） |
-| `EDU_API_KEY` | 平台个人中心创建的 MCP 明文密钥（必填，仅创建时展示一次） |
+| `EDU_API_KEY` | 登录平台`https://edu.tksai.com`后，在个人中心创建的 MCP 明文密钥（必填，仅创建时展示一次） |
 | `EDU_TERMINAL` | 可选，终端类型，默认 `20`（H5） |
 
 ## 提供的工具

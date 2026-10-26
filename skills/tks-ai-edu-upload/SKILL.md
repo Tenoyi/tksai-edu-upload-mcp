@@ -12,7 +12,7 @@ description: 教学平台内容上传与作品管理 MCP。用于将本地文件
 连接器通过两个环境变量鉴权，启动前必须配置好：
 
 - `EDU_API_BASE`：后端 API 地址，固定 `https://edu.tksai.com/app-api`。
-- `EDU_API_KEY`：在「个人中心 → MCP 管理」创建的密钥。
+- `EDU_API_KEY`：登录`https://edu.tksai.com`，在「个人中心 → MCP 管理」创建的密钥。
 
 注意：
 - **不要**设置 `tenant-id`，后端会依据 API Key 自动推导租户。
