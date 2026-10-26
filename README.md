@@ -32,10 +32,10 @@
 
 | 平台 | 架构 | 下载地址 |
 |---|---|---|
-| macOS | Apple Silicon (arm64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/latest/download/tks-ai-edu-upload-mcp-macos-arm64 |
-| macOS | Intel (x64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/latest/download/tks-ai-edu-upload-mcp-macos-x64 |
-| Windows | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/latest/download/tks-ai-edu-upload-mcp-win-x64.exe |
-| Linux | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/latest/download/tks-ai-edu-upload-mcp-linux-x64 |
+| macOS | Apple Silicon (arm64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/1.0.0/tks-ai-edu-upload-mcp-macos-arm64 |
+| macOS | Intel (x64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/1.0.0/tks-ai-edu-upload-mcp-macos-x64 |
+| Windows | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/1.0.0/tks-ai-edu-upload-mcp-win-x64.exe |
+| Linux | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/1.0.0/tks-ai-edu-upload-mcp-linux-x64 |
 
 2. 已在教学平台（https://edu.tksai.com）注册，通过「个人中心 → MCP 管理」创建密钥；
 3. 在智能体的 MCP 配置中加入（`command` 改为下载文件的实际路径）：
