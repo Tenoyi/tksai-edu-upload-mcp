@@ -1,0 +1,19 @@
+{
+  "fields": [
+    {
+      "key": "EDU_API_BASE",
+      "label": "后端 API 地址",
+      "type": "text",
+      "required": true,
+      "default": "https://edu.tksai.com/app-api",
+      "description": "教学平台后端地址，固定为 https://edu.tksai.com/app-api"
+    },
+    {
+      "key": "EDU_API_KEY",
+      "label": "API Key",
+      "type": "password",
+      "required": true,
+      "description": "登录平台后，在「个人中心 → MCP 管理」创建的明文密钥（仅创建时展示一次）"
+    }
+  ]
+}

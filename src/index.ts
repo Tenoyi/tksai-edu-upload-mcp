@@ -91,14 +91,15 @@ server.registerTool(
     inputSchema: {},
   },
   async () => {
-    // 免安装版为主线（无需 Node.js）：command 指向下载的二进制文件
+    // 最新命令模式：npx（无需本地下载，自动从 npm 拉取 @tks-ai/edu-upload-mcp）
     const example = {
       mcpServers: {
         'tks-ai-edu-upload': {
           type: 'stdio',
-          command: '/Users/你的用户名/Downloads/tks-ai-edu-upload-mcp-macos-arm64',
+          command: 'npx',
+          args: ['-y', '@tks-ai/edu-upload-mcp'],
           env: {
-            EDU_API_BASE: 'https://你的域名/app-api',
+            EDU_API_BASE: 'https://edu.tksai.com/app-api',
             EDU_API_KEY: 'tksai_xxxx（在「个人中心 → API Key 管理」创建）',
           },
         },
@@ -107,11 +108,12 @@ server.registerTool(
     const text =
       JSON.stringify(example, null, 2) +
       '\n\n说明：\n' +
-      '1. 本程序为免安装版：command 请改为下载后文件的实际路径（Windows 例：C:\\\\Users\\\\你的用户名\\\\Downloads\\\\tks-ai-edu-upload-mcp-win-x64.exe）。\n' +
-      '2. EDU_API_BASE 为后端 /app-api 地址；EDU_API_KEY 为在个人中心创建的 API Key。\n' +
-      '3. 不要填写 tenant-id，后端会根据 API Key 自动推导租户。\n' +
-      '4. 工具：upload_file / upload_folder / create_work / update_work。\n' +
-      '5. WorkBuddy 接入：env 必须用 ${VAR} 占位符（EDU_API_BASE / EDU_API_KEY），真实值在 WorkBuddy 密钥管理中填，禁止写进配置。'
+      '1. 推荐使用 npx 模式（如上）：无需安装 Node 之外的任何东西，首次运行自动从 npm 拉取 @tks-ai/edu-upload-mcp。注意 command 必须是可执行文件、args 单独成数组，禁止把 "npx -y ..." 写进同一个 command 字符串（否则会报 ENOENT）。\n' +
+      '2. 免安装版（无 Node 环境）：改 command 为下载的二进制实际路径，例如 macOS arm64 为 /Users/你的用户名/Downloads/tks-ai-edu-upload-mcp-macos-arm64，Windows 为 C:\\Users\\你的用户名\\Downloads\\tks-ai-edu-upload-mcp-win-x64.exe。\n' +
+      '3. EDU_API_BASE 为后端 /app-api 地址；EDU_API_KEY 为在个人中心创建的 API Key。\n' +
+      '4. 不要填写 tenant-id，后端会根据 API Key 自动推导租户。\n' +
+      '5. 工具：upload_file / upload_folder / create_work / update_work。\n' +
+      '6. WorkBuddy 接入：env 必须用 ${VAR} 占位符（EDU_API_BASE / EDU_API_KEY），真实值在 WorkBuddy 密钥管理中填，禁止写进配置。'
     return { content: [{ type: 'text', text }] }
   }
 )

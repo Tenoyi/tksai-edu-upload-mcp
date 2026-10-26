@@ -59,23 +59,24 @@
 > 注意：macOS / Linux 下载后需 `chmod +x <文件>` 赋予执行权限。
 > 完整接入指南（各智能体配置位置、FAQ）见教学平台文档《MCP 接入指引》。
 
-### 方式二：npm 包安装（需本机已装 Node.js ≥ 18，适合开发者）
+### 方式二：npm 包安装（需本机已装 Node.js ≥ 18，适合开发者，最新命令模式）
 
 1. 全局安装（只需执行一次）：
 
 ```bash
-npm install -g tks-ai-edu-upload-mcp
+npm install -g @tks-ai/edu-upload-mcp
 ```
 
 2. 已在教学平台（https://edu.tksai.com）注册，通过「个人中心 → MCP 管理」创建密钥；
-3. 在智能体的 MCP 配置中加入（`command` 使用 `npx tks-ai-edu-upload-mcp`，无需关心文件保存位置）：
+3. 在智能体的 MCP 配置中加入（`command` 用 `npx`，`args` 为 `["-y","@tks-ai/edu-upload-mcp"]`，无需关心文件保存位置）：
 
 ```json
 {
   "mcpServers": {
     "tks-ai-edu-upload": {
       "type": "stdio",
-      "command": "npx tks-ai-edu-upload-mcp",
+      "command": "npx",
+      "args": ["-y", "@tks-ai/edu-upload-mcp"],
       "env": {
         "EDU_API_BASE": "https://edu.tksai.com/app-api",
         "EDU_API_KEY": "tksai_你的明文Key"
@@ -85,7 +86,8 @@ npm install -g tks-ai-edu-upload-mcp
 }
 ```
 
-> 安装完成后命令即为 `npx tks-ai-edu-upload-mcp`，各智能体的接入向导会自动用它生成配置。
+> 安装完成后的运行命令为 `npx -y @tks-ai/edu-upload-mcp`，各智能体的接入向导会自动用它生成配置。
+> ⚠️ 注意：MCP 配置的 `command` 必须是单个可执行文件名（如 `npx`），参数要拆到独立的 `args` 数组里；切勿写成 `"command": "npx -y @tks-ai/edu-upload-mcp"`（会被当成单个文件名导致 ENOENT）。
 
 | 环境变量 | 说明 |
 |---|---|
