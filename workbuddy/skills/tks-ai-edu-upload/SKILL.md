@@ -16,6 +16,7 @@ description: 教学平台内容上传与作品管理 MCP。用于将本地文件
 
 注意：
 - **不要**设置 `tenant-id`，后端会依据 API Key 自动推导租户。
+- **不要**在配置里加 `X-Api-Key` 等请求头：Server 已自动以 `Authorization: Bearer <EDU_API_KEY>` 携带密钥，多余请求头无效（后端只认 Bearer，误用 X-Api-Key 会 401）。
 - 配置修改后需重启智能体（MCP 在启动时读取环境变量）。
 
 ## 工具清单与用法

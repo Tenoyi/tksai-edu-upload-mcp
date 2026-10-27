@@ -4,7 +4,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod'
 import { uploadFile, uploadFolder, createWork, updateWork } from './eduClient.js'
 
-const server = new McpServer({ name: 'tks-ai-edu-upload', version: '1.0.0' })
+const server = new McpServer({ name: 'tks-ai-edu-upload', version: '1.0.3' })
 
 server.registerTool(
   'upload_file',
@@ -113,7 +113,8 @@ server.registerTool(
       '3. EDU_API_BASE 为后端 /app-api 地址；EDU_API_KEY 为在个人中心创建的 API Key。\n' +
       '4. 不要填写 tenant-id，后端会根据 API Key 自动推导租户。\n' +
       '5. 工具：upload_file / upload_folder / create_work / update_work。\n' +
-      '6. WorkBuddy 接入：env 必须用 ${VAR} 占位符（EDU_API_BASE / EDU_API_KEY），真实值在 WorkBuddy 密钥管理中填，禁止写进配置。'
+      '6. WorkBuddy 接入：env 必须用 ${VAR} 占位符（EDU_API_BASE / EDU_API_KEY），真实值在 WorkBuddy 密钥管理中填，禁止写进配置。\n' +
+      '7. 鉴权方式：Server 自动以 Authorization: Bearer <EDU_API_KEY> 调用后端，不要在配置里写 X-Api-Key 请求头（后端不认，会 401）。'
     return { content: [{ type: 'text', text }] }
   }
 )

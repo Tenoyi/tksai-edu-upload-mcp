@@ -12,7 +12,7 @@ const TERMINAL = process.env.EDU_TERMINAL || '20'
 /** 组装鉴权请求头；注意：预签名直传 URL 不需要这些头（签名在 URL 内） */
 function authHeaders(extra?: Record<string, string>): Record<string, string> {
   const h: Record<string, string> = { terminal: TERMINAL, ...extra }
-  if (API_KEY) h['X-Api-Key'] = API_KEY
+  if (API_KEY) h['Authorization'] = `Bearer ${API_KEY}`
   return h
 }
 
@@ -119,7 +119,7 @@ export async function uploadFolder(localDir: string, directory?: string): Promis
   // TS 5.5 下 Uint8Array<ArrayBufferLike> 不兼容 BodyInit，复制到 ArrayBuffer 支撑的视图
   const view = new Uint8Array(buf.byteLength)
   view.set(buf)
-  // 预签名直传：仅带 Content-Type，不带 X-Api-Key（签名已在 URL 内）
+  // 预签名直传：仅带 Content-Type，不带鉴权头（签名已在 URL 内）
   const put = await fetch(presigned.uploadUrl, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/zip' },

@@ -95,6 +95,8 @@ npm install -g @tks-ai/edu-upload-mcp
 | `EDU_API_KEY` | 登录平台`https://edu.tksai.com`后，在个人中心创建的 MCP 明文密钥（必填，仅创建时展示一次） |
 | `EDU_TERMINAL` | 可选，终端类型，默认 `20`（H5） |
 
+> **认证方式**：本 MCP Server 调用后端接口时，会以 `Authorization: Bearer <EDU_API_KEY>` 请求头携带密钥（**不是** `X-Api-Key`），无需、也不能在配置里手写任何请求头。只要 `EDU_API_KEY` 填对，鉴权即生效。
+
 ## 提供的工具
 
 | 工具 | 作用 |
@@ -112,4 +114,105 @@ npm install
 npm run dev        # tsx 直接运行源码
 npm run build      # tsc 编译到 dist/
 npm run build:bin  # Bun 打各平台免安装可执行文件到 release/
+
+## 发布与维护
+
+本项目的分发渠道有三处，互不自动同步，需分别发布、且版本号保持一致：
+
+1. **npmjs.com**：`npx -y @tks-ai/edu-upload-mcp` 走的是它；
+2. **GitHub Releases**：「方式一下载版」向导从这里拉取免安装二进制；
+3. **WorkBuddy 开放平台**：连接器市场从你上传的 zip 上架。
+
+> 统一约定：三者使用**同一版本号**（如代码改动后 bump 到 `1.0.3`）。GitHub tag 沿用历史命名（现有为 `1.0.0`，即不带 `v` 前缀，故新 tag 为 `1.0.3`），便于排障与用户核对。
+
+### 任务一：构建发布 npmjs.com
+
+影响 `npx` 用户，是其它分发渠道的「源头版本号」。
+
+```bash
+npm whoami                                 # 确认已登录 npm，未登录先 npm login
+npm version patch --no-git-tag-version     # 提升版本（patch/minor/major，按需；去掉该参数可同时打 git tag）
+npm publish                               # prepublishOnly 会自动 tsc 重建 dist/ 再上传
+npm view @tks-ai/edu-upload-mcp version   # 复核已发布版本
+```
+
+- 发布内容仅含 `dist/`、`package.json`、`README.md`（npm 自动携带），`skills/` 等不进 npm 包。
+- `npx` 用户稍等 npm CDN 同步（几分钟）后即自动拿到新版本，无需手动升级。
+
+**何时需要执行**：任何会编译进 `dist/` 的源码改动（`src/eduClient.ts`、`src/index.ts`、依赖升级等）都必须 bump 版本并发布。仅改 `README.md` 等不在包内文档、且不影响运行时时可不发；但改了 `get_api_key_help` 文案（位于 `src/index.ts`）则需要发。
+
+### 任务二：打包二进制并发布 GitHub Releases
+
+影响「方式一下载版」用户。二进制是独立打包的运行时，**不会**随 npm 自动更新。
+
+```bash
+npm run build:bin             # 打全部 4 平台到 release/；可加 -- --target macos-arm64 指定单个平台
+```
+
+产物（`release/` 目录，约 400MB，已被 .gitignore 忽略，勿提交仓库）：
+
+| 平台 | 文件 |
+|---|---|
+| macOS arm64 | `tks-ai-edu-upload-mcp-macos-arm64` |
+| macOS x64 | `tks-ai-edu-upload-mcp-macos-x64` |
+| Windows x64 | `tks-ai-edu-upload-mcp-win-x64.exe` |
+| Linux x64 | `tks-ai-edu-upload-mcp-linux-x64` |
+
+构建需本机已安装 `bun`（devDependency，随 `npm install` 安装，`node build.mjs` 调用）。随后在 GitHub 建 Release 并上传这 4 个文件：
+
+- **Web 方式**：打开 `https://github.com/Tenoyi/tksai-edu-upload-mcp/releases` → Draft a new release → Tag 填 `1.0.3`（与 npm 版本一致，沿用不带 `v` 前缀的约定）→ 把 `release/` 下 4 个文件作为 assets 上传 → Publish。
+- **CLI 方式**（需先 `brew install gh` 并 `gh auth login`）：`gh release create 1.0.3 release/* --title "1.0.3"`。
+
+> 前端向导按 `VITE_MCP_RELEASE_BASE_URL` + 该 tag 拼接下载地址，故 **tag 必须与版本号严格对应**（若前端约定带 `v`，则此处也用 `v1.0.3`，两边保持一致）。
+> ⚠️ 发布后务必把上面「方式一」下载表格里的链接版本号（当前写死 `1.0.0`）改成新 tag（如 `1.0.3`），否则新用户会下载到旧版二进制。
+
+**何时需要执行**：任何会编译进二进制的源码改动（基本等于「要发 npm 时」）。不重建会导致下载版用户仍跑旧逻辑（例如旧版 `X-Api-Key` 头会 401）。纯文档改动（README / SKILL / 连接器元数据）不影响二进制，可跳过；但建议二进制版本号与 npm 对齐。
+
+### 任务三：打包 zip 并发布 WorkBuddy 开放平台
+
+影响连接器市场的上架内容。zip 是独立交付物，需手动上传审核。
+
+先用 **Python** 打包（避免 macOS `ditto`/`zip` 塞入 `._` 元数据污染）：
+
+```bash
+python3 - <<'PY'
+import zipfile, os
+files = [
+    ('connector-meta.json', 'connector-meta.json'),
+    ('mcp.json', 'mcp.json'),
+    ('token-schema.json', 'token-schema.json'),
+    ('icon.svg', 'icon.svg'),
+    ('README.md', 'README.md'),
+    ('skills/tks-ai-edu-upload/SKILL.md', 'skills/tks-ai-edu-upload/SKILL.md'),
+]
+out = 'tksai-edu-upload-connector.zip'
+with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
+    for src, arc in files:
+        assert os.path.exists(src), src
+        z.write(src, arc)
+print('written', out, os.path.getsize(out), 'bytes')
+PY
+```
+
+随后登录 WorkBuddy 开放平台后台 → 连接器市场 → 上传/更新该连接器（提交生成的 `tksai-edu-upload-connector.zip`），审核通过后上架。
+
+提交前自检：
+- 包内 6 个文件、结构正确、无 `._` 冗余条目；
+- `token-schema.json` 含顶级 `title` / `description`（必填）；
+- `mcp.json` 指向正确 npm 包 `@tks-ai/edu-upload-mcp` 且 `env` 用 `${EDU_API_BASE}` / `${EDU_API_KEY}` 占位符；
+- `connector-meta.json` 的 `version` 与本次 npm 版本一致、`auth_mode` 为 `token`。
+
+> 打包前先把 `connector-meta.json` 的 `version` 改为本次版本号（如 `1.0.3`），使市场版本与 npm 对齐。
+
+**何时需要执行**：连接器包内任一文件变化时需重传——`connector-meta.json` 版本变更、`mcp.json` / `token-schema.json` 字段调整、`skills/.../SKILL.md` 或 zip 内 `README.md` 内容更新、或底层 npm 包升级（`mcp.json` 引用的包建议同步对齐版本）。
+
+### 推荐发布顺序（保证三端一致）
+
+1. 完成源码改动；
+2. `npm version patch --no-git-tag-version` + `npm publish` → 得到版本号（如 `1.0.3`）；
+3. `npm run build:bin` → GitHub 建 `1.0.3` Release，上传 4 个二进制；
+4. 把 `connector-meta.json` 的 `version` 改为 `1.0.3` → 重新打包 zip → 上传 WorkBuddy；
+5. 更新 README「方式一」下载表格链接版本号为 `1.0.3`。
+
+按此顺序，`npx` 用户、下载版用户、市场用户三者拿到的逻辑完全一致。
 ```

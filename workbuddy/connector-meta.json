@@ -1,0 +1,26 @@
+{
+  "name": "tks-ai-edu-upload",
+  "name_en": "TKS AI Edu Upload",
+  "displayName": "教学作品上传（tksai）",
+  "description": "将本地文件 / 文件夹（含 index.html 的教学应用）上传到教学平台对象存储，并创建 / 更新教学作品，获得永久分享链接与持续收益。",
+  "description_zh": "将本地文件 / 文件夹（含 index.html 的教学应用）上传到教学平台对象存储，并创建 / 更新教学作品，获得永久分享链接与持续收益。",
+  "description_en": "Upload local files / folders (teaching web apps with index.html) to the edu platform's object storage, and create / update teaching works to get permanent shareable links and ongoing revenue.",
+  "version": "1.0.3",
+  "type": "mcp",
+  "source": "tks-ai-edu-upload",
+  "auth_mode": "token",
+  "minWorkbuddyVersion": "4.24.0",
+  "icon": "icon.svg",
+  "category": "education",
+  "tags": ["education", "upload", "mcp", "tksai"],
+  "examples_zh": [
+    "把 /Users/me/my-course 这个文件夹上传到教学平台并创建教学作品",
+    "将本地 cover.png 上传后，用它作为作品封面去更新已有作品",
+    "我做好了一个 H5 互动课件，帮我发布到 edu.tksai.com 拿到分享链接"
+  ],
+  "examples_en": [
+    "Upload the folder /Users/me/my-course to the edu platform and create a teaching work",
+    "After uploading cover.png, use it as the cover to update an existing work",
+    "I built an H5 interactive lesson, help me publish it to edu.tksai.com and get a share link"
+  ]
+}

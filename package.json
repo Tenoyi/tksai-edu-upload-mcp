@@ -1,6 +1,6 @@
 {
   "name": "@tks-ai/edu-upload-mcp",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "教学应用上传 MCP Server：供 AI 编程智能体（CodeBuddy/Trae/WorkBuddy/Codex）上传文件/文件夹并创建教学作品",
   "type": "module",
   "bin": {

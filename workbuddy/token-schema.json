@@ -1,4 +1,6 @@
 {
+  "title": "教学平台 API 凭证",
+  "description": "请填写教学平台（edu.tksai.com）的接入信息。API Key 在「个人中心 → MCP 管理」创建，仅展示一次，请妥善保存；凭证仅用于本连接器调用平台接口，不会外传。",
   "fields": [
     {
       "key": "EDU_API_BASE",
