@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
+    "tks-ai-edu-upload-token": {
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@tks-ai/edu-upload-mcp"],

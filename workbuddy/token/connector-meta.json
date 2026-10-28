@@ -1,0 +1,24 @@
+{
+  "name": "tks-ai-edu-upload-token",
+  "name_en": "TKS AI Edu Upload (API Key)",
+  "displayName": "智教坊（API Key 版）",
+  "description": "将本地文件 / 文件夹（含 index.html 的教学应用）上传到教学平台对象存储，并创建 / 更新教学作品。通过 API Key 鉴权，适合 CodeBuddy / Trae / Codex 等本地 stdio 配置场景。",
+  "description_zh": "将本地文件 / 文件夹（含 index.html 的教学应用）上传到教学平台对象存储，并创建 / 更新教学作品。通过 API Key 鉴权，适合 CodeBuddy / Trae / Codex 等本地 stdio 配置场景。",
+  "description_en": "Upload local files / folders (teaching web apps with index.html) to the edu platform's object storage, and create / update teaching works. Uses an API Key for auth — for local stdio setups like CodeBuddy / Trae / Codex.",
+  "version": "1.0.4",
+  "type": "mcp",
+  "source": "tks-ai-edu-upload-token",
+  "auth_mode": "token",
+  "minWorkbuddyVersion": "4.24.0",
+  "icon": "icon.svg",
+  "category": "education",
+  "tags": ["education", "upload", "mcp", "tksai", "apikey"],
+  "examples_zh": [
+    "用 API Key 把 /Users/me/my-course 文件夹上传并创建教学作品",
+    "将本地 cover.png 上传后，用它作为作品封面去更新已有作品"
+  ],
+  "examples_en": [
+    "Upload /Users/me/my-course with an API Key and create a teaching work",
+    "After uploading cover.png, use it as the cover to update an existing work"
+  ]
+}

@@ -107,6 +107,31 @@ npm install -g @tks-ai/edu-upload-mcp
 | `update_work` | 更新已有教学作品 |
 | `get_api_key_help` | 返回 MCP 配置示例与说明 |
 
+## 方式三：远程 streamableHttp（支持 MCP 远程连接的平台）
+
+适合 MCP Inspector、WorkBuddy 等支持 `streamableHttp` 传输与 MCP OAuth 2.1 的客户端。MCP Server 以 HTTP 服务形式常驻，客户端通过 `Authorization: Bearer <OAuth token 或 tksai_ API Key>` 连接 `/mcp`，无需本地安装。
+
+启动（需先 `npm run build` 编译到 dist/）：
+
+```bash
+MCP_TRANSPORT=http PORT=3000 node dist/index.js
+```
+
+客户端连接 `http://<host>:3000/mcp`：
+- 无 `Authorization` 时返回 `401` + `WWW-Authenticate: Bearer resource_metadata="<MCP_BASE_URL>/.well-known/oauth-protected-resource"`，引导走 OAuth 授权；
+- OAuth 通道：客户端拉取 `/.well-known/oauth-protected-resource`（返回 `authorization_servers` 指向后端 AS）→ 走标准 `/oauth/authorize` + PKCE → 拿到 token 后携带调用 `/mcp`；
+- API Key 通道（CodeBuddy / Trae / Codex 等）：直接带 `Authorization: Bearer tksai_xxxx`（在「个人中心 → API Key 管理」创建）。
+
+| 环境变量 | 说明 |
+|---|---|
+| `MCP_TRANSPORT` | 设为 `http` 启用 streamableHttp（默认 `stdio`） |
+| `PORT` | HTTP 监听端口，默认 `3000` |
+| `MCP_BASE_URL` | 本 MCP 服务对外域名，用于元数据 `resource` 与 `WWW-Authenticate`，默认 `https://mcp.tksai.com` |
+| `MCP_AUTH_SERVER` | 后端授权服务器地址（出现在 `authorization_servers`），默认 `https://api.tksai.com` |
+| `EDU_API_BASE` / `EDU_API_KEY` / `EDU_TERMINAL` | 同方式一/二（stdio 回退用；http 模式通常由调用方透传，可不设） |
+
+> 两种传输共用同一套工具实现；差异仅在后端如何把凭据解析为登录用户（OAuth token 或 tksai_ API Key），MCP Server 侧无差别、不保存任何用户凭据。
+
 ## 本地开发
 
 ```bash
