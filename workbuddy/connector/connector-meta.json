@@ -1,0 +1,25 @@
+{
+  "name": "tks-ai-edu-upload",
+  "name_en": "TKS AI Edu Upload",
+  "name_zh": "智教坊",
+  "description": "将 AI 创作的教学工具或互动课件发布到智教坊（本地版）：以本机进程运行，既能直接读取并上传本地文件/目录/封面到平台对象存储，也能创建/更新教学作品、查询订单与收益。通过 OAuth 2.1 浏览器登录鉴权，无需手动填写密钥。",
+  "description_zh": "将 AI 创作的本地教学工具或互动课件发布到智教坊：本连接器以本机进程运行，支持上传本地文件/目录/封面，以及创建/更新教学作品、查询订单与收益等。使用 OAuth 2.1 登录鉴权，无需手动密钥。",
+  "description_en": "Publish AI-built teaching tools/courseware to edu.tksai.com. Runs locally: uploads local files/folders/covers to object storage AND creates/updates works, queries orders/revenue. Authenticated via OAuth 2.1 (browser login, no manual key).",
+  "version": "2.1.0",
+  "type": "mcp",
+  "source": "tks-ai-edu-upload",
+  "minWorkbuddyVersion": "5.0.0",
+  "icon": "icon.svg",
+  "category": "education",
+  "tags": ["education", "upload", "mcp", "tksai", "oauth", "local"],
+  "examples_zh": [
+    "上传本地 H5 课件目录并发布为教学作品",
+    "用 upload_cover 上传封面图后创建作品",
+    "我做好了一个互动课件，帮我校验并发布到智教坊"
+  ],
+  "examples_en": [
+    "Upload a local H5 courseware folder and publish it as a teaching work",
+    "Upload a cover image via upload_cover then create a work",
+    "I built an interactive lesson; help me validate and publish it to edu.tksai.com"
+  ]
+}

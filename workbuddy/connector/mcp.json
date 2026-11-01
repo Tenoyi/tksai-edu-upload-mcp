@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "tks-ai-edu-upload": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@tks-ai/edu-upload-mcp"],
+      "runtime": {
+        "type": "node",
+        "version": "20"
+      },
+      "npmRegistry": "https://registry.npmmirror.com",
+      "timeout": 30000
+    }
+  }
+}

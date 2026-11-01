@@ -1,34 +1,38 @@
-import zipfile, os
+import os
+import zipfile
 
-BASE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.dirname(BASE)
+ROOT = os.path.dirname(__file__)
 
-# 两个独立连接器（不同 source），分别打包为两个 zip 提交官方审核
-connectors = [
-    # (子目录, 输出 zip 名, 该目录内需归档的文件)
-    ('oauth', 'tksai-edu-upload-connector.zip', [
+# 单一统一连接器：本地进程（stdio）+ OAuth 2.1 鉴权
+# (子目录, 输出 zip 名, 文件清单)
+#   文件清单项为文件名（位于子目录内）或 (源路径, 目标路径) 元组
+CONNECTORS = [
+    ('connector', 'tksai-edu-upload-connector.zip', [
         'connector-meta.json',
         'mcp.json',
         'icon.svg',
         ('skills/tks-ai-edu-upload/SKILL.md', 'skills/tks-ai-edu-upload/SKILL.md'),
     ]),
-    ('token', 'tksai-edu-upload-token-connector.zip', [
-        'connector-meta.json',
-        'mcp.json',
-        'token-schema.json',
-        'icon.svg',
-        ('skills/tks-ai-edu-upload-token/SKILL.md', 'skills/tks-ai-edu-upload-token/SKILL.md'),
-    ]),
 ]
 
-for sub, out_name, files in connectors:
-    out = os.path.join(BASE, out_name)
+
+def build(sub: str, zip_name: str, files) -> None:
+    sub_dir = os.path.join(ROOT, sub)
+    out = os.path.join(ROOT, zip_name)
+    if os.path.exists(out):
+        os.remove(out)
     with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
-        # README 取自仓库根，作为连接器说明
-        z.write(os.path.join(REPO, 'README.md'), 'README.md')
         for f in files:
-            src, arc = f if isinstance(f, tuple) else (f, f)
-            p = os.path.join(BASE, sub, src)
-            assert os.path.exists(p), f'missing: {p}'
-            z.write(p, arc)
-    print('written', out, os.path.getsize(out), 'bytes')
+            if isinstance(f, tuple):
+                src, dst = f
+            else:
+                src = dst = f
+            p = os.path.join(sub_dir, src)
+            assert os.path.exists(p), f'missing {p}'
+            z.write(p, dst)
+    print(f'built {out}')
+
+
+if __name__ == '__main__':
+    for sub, zname, files in CONNECTORS:
+        build(sub, zname, files)

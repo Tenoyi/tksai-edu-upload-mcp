@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "tks-ai-edu-upload": {
-      "type": "streamableHttp",
-      "url": "https://edu.tksai.com/app-api/mcp",
-      "timeout": 30000
-    }
-  }
-}
