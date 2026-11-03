@@ -92,7 +92,7 @@ function finalize(t: TokenSet): TokenSet {
 }
 
 function defaultClientId(): string {
-  return process.env.EDU_OAUTH_CLIENT_ID || 'tks-ai-edu-upload'
+  return process.env.EDU_OAUTH_CLIENT_ID || 'tksai-edu-upload'
 }
 
 function scope(): string {
@@ -309,12 +309,40 @@ function getMeta(): Promise<AuthMetadata> {
   return metaPromise
 }
 
-/** 返回 access_token（不含 Bearer 前缀）。优先用 EDU_API_KEY，否则走 OAuth。 */
+/**
+ * 读取由 WorkBuddy 云端托管并注入的环境变量令牌（auth_mode=server-side 模式）。
+ * 文档未固定变量名，这里按常见约定尝试多个候选；若 WorkBuddy 实际注入的变量名不同，
+ * 在此追加即可（或统一走本地 DCR 兜底）。
+ */
+function injectedToken(): string | undefined {
+  const candidates = [
+    process.env.EDU_OAUTH_TOKEN,
+    process.env.MCP_OAUTH_TOKEN,
+    process.env.WORKBUDDY_OAUTH_TOKEN,
+    process.env.CODEBUDDY_OAUTH_TOKEN,
+  ]
+  for (const v of candidates) {
+    if (v && v.trim() && !v.startsWith('${')) {
+      return v.trim().replace(/^Bearer\s+/i, '')
+    }
+  }
+  return undefined
+}
+
+/**
+ * 返回 access_token（不含 Bearer 前缀）。
+ * 优先级：EDU_API_KEY（手动密钥） > 注入令牌（WorkBuddy 云端托管） > 本地 OAuth（DCR + 浏览器登录，兜底）。
+ */
 export async function getAccessToken(): Promise<string> {
   const key = process.env.EDU_API_KEY
   if (key && key.trim()) {
     return key.startsWith('Bearer ') ? key.slice(7).trim() : key.trim()
   }
+  const injected = injectedToken()
+  if (injected) {
+    return injected
+  }
+  // 兜底：本地动态客户端注册 + 浏览器登录（开发 / 非 WorkBuddy 托管场景）
   const meta = await getMeta()
   const cached = loadCache()
   if (cached && cached.access_token) {

@@ -369,7 +369,7 @@ return upstreamClient.callTool(request.params)
 ```json
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
+    "tksai-edu-upload": {
       "command": "node",
       "args": ["/abs/path/tksai-edu-upload-mcp/dist/index.js"],
       "env": {
@@ -383,14 +383,14 @@ return upstreamClient.callTool(request.params)
 > 也可用 `"command": "npm", "args": ["start"], "cwd": "/abs/path/tksai-edu-upload-mcp"`（依赖已 build）。
 
 ## 10.3 方式二：Bun 单文件二进制（非开发者 / 小白，免装 Node）
-前置：`npm install && npm run build:bin`（见 `build.mjs`），产物在 `release/`：
-`tks-ai-edu-upload-mcp-macos-arm64` / `macos-x64` / `win-x64.exe` / `linux-x64`（内嵌 Bun 运行时，单文件）。
+前置：`npm install && npm run build:bin`（见 `scripts/build-binary.mjs`），产物在 `release/`：
+`tksai-edu-upload-mcp-macos-arm64` / `macos-x64` / `win-x64.exe` / `linux-x64`（内嵌 Bun 运行时，单文件）。
 
 ```json
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
-      "command": "/abs/path/tksai-edu-upload-mcp/release/tks-ai-edu-upload-mcp-macos-arm64",
+    "tksai-edu-upload": {
+      "command": "/abs/path/tksai-edu-upload-mcp/release/tksai-edu-upload-mcp-macos-arm64",
       "args": [],
       "env": {
         "EDU_API_KEY": "tk_xxxxxxxxxxxx"
@@ -402,12 +402,12 @@ return upstreamClient.callTool(request.params)
 > 二进制直接做 `command`，无需 `node`、无需 `npx`；平台选对应文件即可。
 
 ## 10.4 方式三：`npx`（需先把包 `npm publish` 到 npmjs.com）
-包名为 **`@tks-ai/edu-upload-mcp`**（`package.json` 已配 `publishConfig.public` + npmjs registry），不是 `@tks-ai/tks-ai-upload-mcp`。`npx` 会在本机下载并执行其 `bin`（`tks-ai-edu-upload-mcp` → `dist/index.js`），**仍在本机运行、具备本地 FS 权限**。
+包名为 **`@tks-ai/edu-upload-mcp`**（`package.json` 已配 `publishConfig.public` + npmjs registry），不是 `@tks-ai/tks-ai-upload-mcp`。`npx` 会在本机下载并执行其 `bin`（`tksai-edu-upload-mcp` → `dist/index.js`），**仍在本机运行、具备本地 FS 权限**。
 
 ```json
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
+    "tksai-edu-upload": {
       "command": "npx",
       "args": ["-y", "@tks-ai/edu-upload-mcp"],
       "env": {
@@ -441,7 +441,7 @@ return upstreamClient.callTool(request.params)
 - 仓库已有真实证据：
   - `workbuddy/oauth/mcp.json`（**无桥、直连 streamableHttp**）：
     ```json
-    { "mcpServers": { "tks-ai-edu-upload": { "type": "streamableHttp", "url": "https://edu.tksai.com/app-api/mcp", "timeout": 30000 } } }
+    { "mcpServers": { "tksai-edu-upload": { "type": "streamableHttp", "url": "https://edu.tksai.com/app-api/mcp", "timeout": 30000 } } }
     ```
     没有 `Authorization`、没有额外 env——OAuth 全在 WorkBuddy 内部。
   - `workbuddy/token/mcp.json`（无桥、直连 streamableHttp）：仅多了 `"headers": { "Authorization": "Bearer ${EDU_API_KEY}" }`。
@@ -475,7 +475,7 @@ return upstreamClient.callTool(request.params)
 ```json
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
+    "tksai-edu-upload": {
       "command": "node",
       "args": ["/abs/path/tksai-edu-upload-mcp/dist/index.js"],
       "env": {
@@ -491,8 +491,8 @@ return upstreamClient.callTool(request.params)
 ```json
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
-      "command": "/abs/path/tksai-edu-upload-mcp/release/tks-ai-edu-upload-mcp-macos-arm64",
+    "tksai-edu-upload": {
+      "command": "/abs/path/tksai-edu-upload-mcp/release/tksai-edu-upload-mcp-macos-arm64",
       "args": [],
       "env": { "EDU_API_KEY": "tk_xxxxxxxxxxxx（或 OAuth 换得的 token）" }
     }
@@ -504,7 +504,7 @@ return upstreamClient.callTool(request.params)
 ```json
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
+    "tksai-edu-upload": {
       "command": "npx",
       "args": ["-y", "@tks-ai/edu-upload-mcp"],
       "env": { "EDU_API_KEY": "tk_xxxxxxxxxxxx（或 OAuth 换得的 token）" }

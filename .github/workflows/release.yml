@@ -43,10 +43,10 @@ jobs:
       - name: Verify artifacts
         run: |
           ls -lh release/
-          test -f release/tks-ai-edu-upload-mcp-win-x64.exe
-          test -f release/tks-ai-edu-upload-mcp-macos-x64
-          test -f release/tks-ai-edu-upload-mcp-macos-arm64
-          test -f release/tks-ai-edu-upload-mcp-linux-x64
+          test -f release/tksai-edu-upload-mcp-win-x64.exe
+          test -f release/tksai-edu-upload-mcp-macos-x64
+          test -f release/tksai-edu-upload-mcp-macos-arm64
+          test -f release/tksai-edu-upload-mcp-linux-x64
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
@@ -55,10 +55,10 @@ jobs:
           name: ${{ github.event.inputs.tag || github.ref_name }}
           generate_release_notes: true
           files: |
-            release/tks-ai-edu-upload-mcp-win-x64.exe
-            release/tks-ai-edu-upload-mcp-macos-x64
-            release/tks-ai-edu-upload-mcp-macos-arm64
-            release/tks-ai-edu-upload-mcp-linux-x64
+            release/tksai-edu-upload-mcp-win-x64.exe
+            release/tksai-edu-upload-mcp-macos-x64
+            release/tksai-edu-upload-mcp-macos-arm64
+            release/tksai-edu-upload-mcp-linux-x64
           fail_on_unmatched_files: true
 
   publish-npm:

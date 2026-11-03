@@ -57,7 +57,7 @@
 ```json
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
+    "tksai-edu-upload": {
       "type": "streamableHttp",
       "url": "https://edu.tksai.com/app-api/mcp",
       "headers": {
@@ -77,7 +77,7 @@
 ```json
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
+    "tksai-edu-upload": {
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@tks-ai/edu-upload-mcp"],
@@ -97,19 +97,19 @@
 
 | 平台 | 架构 | 下载地址 |
 |---|---|---|
-| macOS | Apple Silicon (arm64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/2.0.3/tks-ai-edu-upload-mcp-macos-arm64 |
-| macOS | Intel (x64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/2.0.3/tks-ai-edu-upload-mcp-macos-x64 |
-| Windows | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/2.0.3/tks-ai-edu-upload-mcp-win-x64.exe |
-| Linux | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/2.0.3/tks-ai-edu-upload-mcp-linux-x64 |
+| macOS | Apple Silicon (arm64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/2.0.3/tksai-edu-upload-mcp-macos-arm64 |
+| macOS | Intel (x64) | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/2.0.3/tksai-edu-upload-mcp-macos-x64 |
+| Windows | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/2.0.3/tksai-edu-upload-mcp-win-x64.exe |
+| Linux | x64 | https://github.com/Tenoyi/tksai-edu-upload-mcp/releases/download/2.0.3/tksai-edu-upload-mcp-linux-x64 |
 
 2. 在智能体的 MCP 配置中加入（`command` 改为下载文件的实际路径）：
 
 ```json
 {
   "mcpServers": {
-    "tks-ai-edu-upload": {
+    "tksai-edu-upload": {
       "type": "stdio",
-      "command": "/Users/你的用户名/Downloads/tks-ai-edu-upload-mcp-macos-arm64",
+      "command": "/Users/你的用户名/Downloads/tksai-edu-upload-mcp-macos-arm64",
       "env": {
         "EDU_API_KEY": "tksai_你的明文Key"
       }
@@ -160,7 +160,7 @@
 npm install
 npm run dev        # tsx 直接运行桥接（需先 export EDU_API_KEY）
 npm run build      # tsc 编译到 dist/
-npm run build:bin  # Bun 打各平台免安装可执行文件到 release/
+npm run build:bin  # Bun 打各平台免安装可执行文件到 release/（脚本：scripts/build-binary.mjs）
 ```
 
 本仓库 `src/` 只有桥接逻辑（单文件），**工具实现、OAuth 2.1、鉴权都在 Java 后端 `yudao-module-mcp` 中**，改工具请改后端。
@@ -186,6 +186,15 @@ npm run build:bin  # Bun 打各平台免安装可执行文件到 release/
 影响 `npx` 用户，是其它分发渠道的「源头版本号」。
 
 ```bash
+node scripts/publish-npm.mjs                 # 默认 patch 自增并发布（脚本自动校验登录/发版/复核）
+node scripts/publish-npm.mjs --bump minor    # 自增 minor / major
+node scripts/publish-npm.mjs --no-bump       # 已手动改好 version 时直接发布
+# 等价快捷命令：npm run publish:npm  /  npm run publish:npm -- --bump minor
+```
+
+若想手动分步执行（等价效果）：
+
+```bash
 npm whoami                                 # 确认已登录 npm，未登录先 npm login
 npm version patch --no-git-tag-version     # 提升版本（patch/minor/major，按需）
 npm publish                               # prepublishOnly 会自动 tsc 重建 dist/ 再上传
@@ -202,19 +211,19 @@ npm view @tks-ai/edu-upload-mcp version   # 复核已发布版本
 影响「方式三下载版」用户。二进制是独立打包的运行时，**不会**随 npm 自动更新。
 
 ```bash
-npm run build:bin             # 打全部 4 平台到 release/；可加 -- --target macos-arm64 指定单个平台
+npm run build:bin             # 打全部 4 平台到 release/；可加 -- --target macos-arm64 指定单个平台（脚本：scripts/build-binary.mjs）
 ```
 
 产物（`release/` 目录，约 400MB，已被 .gitignore 忽略，勿提交仓库）：
 
 | 平台 | 文件 |
 |---|---|
-| macOS arm64 | `tks-ai-edu-upload-mcp-macos-arm64` |
-| macOS x64 | `tks-ai-edu-upload-mcp-macos-x64` |
-| Windows x64 | `tks-ai-edu-upload-mcp-win-x64.exe` |
-| Linux x64 | `tks-ai-edu-upload-mcp-linux-x64` |
+| macOS arm64 | `tksai-edu-upload-mcp-macos-arm64` |
+| macOS x64 | `tksai-edu-upload-mcp-macos-x64` |
+| Windows x64 | `tksai-edu-upload-mcp-win-x64.exe` |
+| Linux x64 | `tksai-edu-upload-mcp-linux-x64` |
 
-构建需本机已安装 `bun`（devDependency，随 `npm install` 安装，`node build.mjs` 调用）。随后在 GitHub 建 Release 并上传这 4 个文件：
+构建需本机已安装 `bun`（devDependency，随 `npm install` 安装，由 `scripts/build-binary.mjs` 调用）。随后在 GitHub 建 Release 并上传这 4 个文件：
 
 - **Web 方式**：打开 `https://github.com/Tenoyi/tksai-edu-upload-mcp/releases` → Draft a new release → Tag 填 `2.0.3`（与 npm 版本一致，不带 `v` 前缀）→ 把 `release/` 下 4 个文件作为 assets 上传 → Publish。
 - **CLI 方式**（需先 `brew install gh` 并 `gh auth login`）：`gh release create 2.0.3 release/* --title "2.0.3"`。
@@ -231,7 +240,7 @@ npm run build:bin             # 打全部 4 平台到 release/；可加 -- --tar
 用仓库自带脚本一次性产出**两个**连接器包（OAuth 版 + API Key 版，内部已处理 `._` 元数据清理）：
 
 ```bash
-python3 workbuddy/pack.py
+python3 scripts/pack-workbuddy.py    # 或 npm run pack:workbuddy
 ```
 
 产物：
@@ -258,9 +267,9 @@ python3 workbuddy/pack.py
 ### 推荐发布顺序（保证三端一致）
 
 1. 改 Java 后端工具 → 部署后端（桥接与连接器自动同步，无需重发）；
-2. 若涉及桥接逻辑：`npm version patch --no-git-tag-version` + `npm publish` → 得到版本号（如 `2.0.1`）；
+2. 若涉及桥接逻辑：`node scripts/publish-npm.mjs`（或手动 `npm version patch --no-git-tag-version` + `npm publish`）→ 得到版本号（如 `2.0.1`）；
 3. `npm run build:bin` → GitHub 建 `2.0.1` Release，上传 4 个二进制；
-4. 把两个 `connector-meta.json` 的 `version` 改为 `2.0.1` → `python3 workbuddy/pack.py` → 上传 WorkBuddy；
+4. 把两个 `connector-meta.json` 的 `version` 改为 `2.0.1` → `python3 scripts/pack-workbuddy.py` → 上传 WorkBuddy；
 5. 更新 README「方式三」下载表格链接版本号为 `2.0.1`。
 
 按此顺序，`npx` 用户、下载版用户、市场用户三者拿到的逻辑完全一致，且都以 Java 后端为准。

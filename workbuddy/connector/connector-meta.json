@@ -1,5 +1,5 @@
 {
-  "name": "tks-ai-edu-upload",
+  "name": "tksai-edu-upload",
   "name_en": "TKS AI Edu Upload",
   "name_zh": "智教坊",
   "description": "将 AI 创作的教学工具或互动课件发布到智教坊（本地版）：以本机进程运行，既能直接读取并上传本地文件/目录/封面到平台对象存储，也能创建/更新教学作品、查询订单与收益。通过 OAuth 2.1 浏览器登录鉴权，无需手动填写密钥。",
@@ -7,7 +7,17 @@
   "description_en": "Publish AI-built teaching tools/courseware to edu.tksai.com. Runs locally: uploads local files/folders/covers to object storage AND creates/updates works, queries orders/revenue. Authenticated via OAuth 2.1 (browser login, no manual key).",
   "version": "2.1.0",
   "type": "mcp",
-  "source": "tks-ai-edu-upload",
+  "source": "tksai-edu-upload",
+  "auth_mode": "server-side",
+  "server_auth": {
+    "auth_type": "mcp_oauth",
+    "data": {
+      "mcp_oauth": {
+        "server_url": "https://edu.tksai.com/app-api/mcp",
+        "scopes": "works.read works.write files.upload"
+      }
+    }
+  },
   "minWorkbuddyVersion": "5.0.0",
   "icon": "icon.svg",
   "category": "education",

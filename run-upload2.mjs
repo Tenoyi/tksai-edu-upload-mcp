@@ -27,7 +27,7 @@ const WORK_NAME = '离子键如何形成'
 const INTRODUCTION =
   '高中化学互动教学应用：通过动画与交互演示离子键的形成过程，帮助学生理解阴阳离子间的静电作用与离子化合物的形成。'
 
-const CLIENT_ID = 'tks-ai-edu-upload'
+const CLIENT_ID = 'tksai-edu-upload'
 const SCOPE = 'openid profile'
 const AUTHZ_ENDPOINT = `${API_BASE}/oauth/authorize`
 const TOKEN_ENDPOINT = `${API_BASE}/oauth/token`

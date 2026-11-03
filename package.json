@@ -1,13 +1,13 @@
 {
   "name": "@tks-ai/edu-upload-mcp",
-  "version": "2.0.6",
+  "version": "2.0.8",
   "description": "教学应用上传 MCP 桥接（stdio ⇄ 远程）：把本地 stdio 连接转发到 Java 后端的 MCP 端点，供 CodeBuddy / Trae / Codex 等使用",
   "type": "module",
   "bin": {
-    "tks-ai-edu-upload-mcp": "dist/index.js"
+    "tksai-edu-upload-mcp": "dist/index.js"
   },
   "files": [
-    "dist/index.js"
+    "dist"
   ],
   "publishConfig": {
     "access": "public",
@@ -15,10 +15,12 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "build:bin": "npm run build && node build.mjs",
+    "build:bin": "npm run build && node scripts/build-binary.mjs",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "publish:npm": "node scripts/publish-npm.mjs",
+    "pack:workbuddy": "python3 scripts/pack-workbuddy.py"
   },
   "engines": {
     "node": ">=18.20.0"
