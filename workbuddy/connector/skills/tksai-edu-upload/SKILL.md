@@ -199,7 +199,7 @@ description: 智教坊教学作品平台的上传发布助手（用户提到智�
 | `trialSeconds` | number | 试看时长（秒），仅 `folder`/`html` 有意义；`0`=不限 |
 | `trialPages` | number | 试看页数，仅 `pdf`/`ppt` 有意义；默认 `5` |
 | `priceValidityDays` | number | 价格有效期（天），默认 `0` |
-| `storageKey` | string | 存储键，选填，≤64 字符 |
+| `storageKey` | string | 浏览器数据键名（页面显示名；即作品代码使用的 localStorage 键名），选填，≤64 字符 |
 
 ### 6.4 字段不完整时的引导规则（含 AI 自动判断/匹配）
 

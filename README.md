@@ -46,8 +46,6 @@
 
 ## 快速开始
 
-先在教学平台（https://edu.tksai.com）注册，通过「个人中心 → MCP 管理」创建密钥（明文仅展示一次）。然后按你的智能体能力选一种方式。
-
 ### 方式一：远程直连（推荐，无需任何本地安装）
 
 适合支持远程 `streamableHttp` 的智能体（WorkBuddy 等）。**不需要本地服务、不需要 Node.js**，可直接调用业务工具。
@@ -60,12 +58,11 @@
     "tksai-edu-upload": {
       "type": "streamableHttp",
       "url": "https://edu.tksai.com/app-api/mcp",
-      "headers": {
-        "Authorization": "Bearer tksai_你的明文Key"
-      }
+      "timeout": 30000
     }
   }
 }
+
 ```
 
 > WorkBuddy 用户无需手填：直接在连接器市场安装「智教坊」连接器（OAuth 版免密钥 / API Key 版填 Key 即可）。
@@ -80,10 +77,7 @@
     "tksai-edu-upload": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@tks-ai/edu-upload-mcp"],
-      "env": {
-        "EDU_API_KEY": "tksai_你的明文Key"
-      }
+      "args": ["-y", "@tks-ai/edu-upload-mcp@latest"]
     }
   }
 }

@@ -32,6 +32,91 @@ const TOKEN_ENDPOINT = `${API_BASE}/oauth/token`
 const log = (...a) => console.error('[run]', ...a)
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
+// 授权成功回调页：渐变卡片 + 成功徽标 + 5 秒环形倒计时，结束后尝试自动关闭窗口
+function successPageHtml() {
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>智教坊授权成功</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 24px; color: #1f2937; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #5b6cff 0%, #8a5bff 50%, #c15bff 100%);
+  }
+  .card {
+    width: 100%; max-width: 420px; background: #fff; border-radius: 20px;
+    padding: 44px 32px 32px; text-align: center;
+    box-shadow: 0 20px 60px rgba(40, 20, 80, .25);
+    animation: pop .5s cubic-bezier(.18, .89, .32, 1.28);
+  }
+  @keyframes pop { from { opacity: 0; transform: translateY(16px) scale(.96); } to { opacity: 1; transform: none; } }
+  .badge {
+    width: 76px; height: 76px; margin: 0 auto 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #5b6cff, #8a5bff);
+    box-shadow: 0 10px 24px rgba(91, 108, 255, .45);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  .badge svg { width: 40px; height: 40px; stroke: #fff; stroke-width: 3; fill: none;
+    stroke-linecap: round; stroke-linejoin: round; }
+  h2 { margin: 0 0 8px; font-size: 22px; font-weight: 700; }
+  p { margin: 0 0 6px; color: #6b7280; font-size: 14px; line-height: 1.6; }
+  .ring {
+    position: relative; margin: 24px auto 14px; width: 56px; height: 56px; border-radius: 50%;
+    background: conic-gradient(#5b6cff calc(var(--p) * 1%), #eceaff 0);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ring::before { content: ""; position: absolute; width: 44px; height: 44px; border-radius: 50%; background: #fff; }
+  .ring span { position: relative; font-weight: 700; font-size: 18px; color: #5b6cff; }
+  .count { font-size: 13px; color: #9ca3af; }
+  .count b { color: #5b6cff; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+    <h2>授权成功 🎉</h2>
+    <p>智教坊 MCP 连接器已获取授权</p>
+    <p>请返回对话框继续使用</p>
+    <div class="ring" id="ring"><span id="num">5</span></div>
+    <div class="count"><b id="num2">5</b> 秒后此页面将自动关闭</div>
+  </div>
+<script>
+  (function () {
+    var n = 5;
+    var ring = document.getElementById('ring');
+    var num = document.getElementById('num');
+    var num2 = document.getElementById('num2');
+    var count = document.querySelector('.count');
+    function render() {
+      ring.style.setProperty('--p', (n / 5) * 100);
+      num.textContent = n;
+      num2.textContent = n;
+    }
+    render();
+    var t = setInterval(function () {
+      n--;
+      if (n <= 0) {
+        render();
+        clearInterval(t);
+        if (window.close) { try { window.close(); } catch (e) {} }
+        count.innerHTML = '可手动关闭此页面 <b>✕</b>';
+        return;
+      }
+      render();
+    }, 1000);
+  })();
+</script>
+</body>
+</html>`
+}
+
 // ---------- auth ----------
 function base64url(buf) {
   return buf.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
@@ -79,11 +164,7 @@ async function doAuth() {
         const code = u.searchParams.get('code')
         const err = u.searchParams.get('error')
         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' })
-        res.end(
-          '<!doctype html><meta charset="utf-8"><title>智教坊登录成功</title>' +
-            '<h2 style="font-family:sans-serif">登录成功 ✅</h2>' +
-            '<p style="font-family:sans-serif">智教坊 MCP 连接器已获取授权，请返回对话框继续使用。</p>'
-        )
+        res.end(successPageHtml())
         clearTimeout(timer)
         server.close()
         if (err) reject(new Error('OAuth 授权被拒绝: ' + err))
